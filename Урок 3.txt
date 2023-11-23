@@ -1,0 +1,57 @@
+Задача 1
+https://metabase.sky.pro/question/89272
+select month_added, count (*) 
+from skymusic.singer_list
+where month_info = '2021-03-01'
+group by month_added
+order by month_added
+
+Задача 2
+https://metabase.sky.pro/question/89273
+select month_added, max (score) as max_score
+from skymusic.singer_list
+where month_info = '2021-03-01'
+group by month_added
+order by month_added
+
+Задача 3
+https://metabase.sky.pro/question/89274
+select month_added, avg (score) as average_score
+from skymusic.singer_list
+where month_info = '2021-03-01' and
+cnt_playlist > '170'
+group by month_added
+order by month_added
+
+Задача 4
+https://metabase.sky.pro/question/89288
+select singer_name,
+avg (score) as average_score, 
+sum (cnt_song_top_chart) as sum_songs
+from skymusic.singer_list
+where month_info = '2021-03-01' and (score >= '8' or cnt_playlist >= '200') and month_added >= '2018-06-01'
+group by singer_name
+
+Задача 5
+https://metabase.sky.pro/question/89291
+select round (score) as round_score,
+sum (cnt_song_top_chart) as sounds,
+count (distinct singer_id) as sum_singer
+from skymusic.singer_list
+group by round_score
+having count (*) > '10' 
+order by round_score
+
+Задача 6
+https://metabase.sky.pro/question/89295
+select month_added,
+count (distinct singer_id) as sum_singer,
+sum (case when cnt_song_top_chart > '7' then 1 else 0 end) as flag_sound,
+sum (case when cnt_song_top_chart > '7' then 1 else 0 end) :: float / count (distinct singer_id) as "share_>7",
+sum (case when cnt_playlist > '100' then 1 else 0 end) as flag_playlist,
+sum (case when cnt_playlist > '100' then 1 else 0 end) :: float / count (distinct singer_id) as "share_>100"
+from skymusic.singer_list
+where month_info = '2021-03-01'
+group by month_added
+having count (distinct singer_id) > '7'
+order by month_added

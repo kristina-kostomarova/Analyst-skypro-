@@ -1,0 +1,33 @@
+Запрос 
+https://metabase.sky.pro/question/90648
+select count (*) as cnt,
+     is_trial,
+     name_partner,
+     rn_purchase_2
+from (select t.*,
+     name_partner, 
+     row_number() over (order by date_purchase asc) as rn_purchase_1,
+     row_number() over (partition by user_id order by date_purchase ) as rn_purchase_2
+from skycinema.client_sign_up t
+      left join skycinema.partner_dict b
+      on t.partner= b.id_partner) t
+group by is_trial, name_partner, rn_purchase_2
+
+
+Запрос 2
+https://metabase.sky.pro/question/90664
+select 
+     name_partner,
+     sum (case when rn_purchase_2 = 1 then 1 else 0 end) cnt_1,
+     sum (case when rn_purchase_2 = 2 then 1 else 0 end) cnt_2,
+     sum (case when rn_purchase_2 = 3 then 1 else 0 end) cnt_3,
+     sum (case when rn_purchase_2 = 4 then 1 else 0 end) cnt_4,
+     sum (case when rn_purchase_2 = 5 then 1 else 0 end) cnt_5,
+     sum (case when rn_purchase_2 = 6 then 1 else 0 end) cnt_6
+from (select t.*,
+     name_partner, 
+     row_number() over (partition by user_id order by date_purchase ) as rn_purchase_2
+from skycinema.client_sign_up t
+      left join skycinema.partner_dict b
+      on t.partner= b.id_partner) t
+group name_partner

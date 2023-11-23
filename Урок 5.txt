@@ -1,0 +1,42 @@
+Задача 1
+https://metabase.sky.pro/question/89602
+ select count (b.directors) / count (a.directors) :: float * 100 as part_directors
+ from imdb.directors_2018 a
+     left join imdb.directors_2019 as b
+     on b.directors =a.directors
+union all
+ select count (c.directors) / count (b.directors) :: float * 100 as part_directors
+ from imdb.directors_2019 b
+     left join imdb.directors_2020 as c
+     on c.directors =b.directors 
+Задача 2
+https://metabase.sky.pro/question/90104
+select id_client,
+amt_loan * 0.9 as reserve_credit, name_city
+from skybank.late_collection_clients a
+join skybank.region_dict b
+        on a.id_city = b.id_city
+where name_city = 'Москва'
+
+union all
+
+select id_client,
+amt_credit * 0.6 as reserve_credit, name_city
+from skybank.early_collection_clients a
+join skybank.region_dict b
+        on a.id_city = b.id_city
+where name_city = 'Москва'
+
+Задача 3 
+https://metabase.sky.pro/question/90110
+select avg (price)
+from airbnb_dallas.listings
+where room_type = 'Private room' and minimum_nights > '30'
+union
+select avg (price)
+from airbnb_new_york.listings
+where room_type = 'Private room' and minimum_nights > '30'
+union
+select avg (price)
+from airbnb_oakland.listings
+where room_type = 'Private room' and minimum_nights > '30'

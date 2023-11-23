@@ -1,0 +1,50 @@
+Задача 1
+https://metabase.sky.pro/question/89494
+select
+sum ("runtimeMinutes") / 60
+from imdb.title_basics a
+ join imdb.title_ratings b
+        on a.tconst = b.tconst
+where genres like '%Animation%' and "endYear" >= '1990' and "averageRating" > '8'
+
+
+Задача 2
+https://metabase.sky.pro/question/89508
+select
+count (*) as sum_rating,
+sum (case when "averageRating" > '0' then 0 else 1 end ) as flag_rating,
+round (sum (case when "averageRating" > '0' then 0 else 1 end ) :: float / count (*) * 100) as share_rating
+from imdb.title_basics a
+ left join imdb.title_ratings b
+        on a.tconst = b.tconst
+where genres like '%Animation%' and "endYear" >= '1950' and "runtimeMinutes" > '60'
+
+ИСПРАВИТЬ  ЗАДАЧУ ЗНАЧЕНИЕ ДОЛЖНО БЫТЬ ОДНО
+
+
+Задача 3 
+https://metabase.sky.pro/question/89866
+select
+distinct case
+     WHEN "averageRating" < 1.5 THEN '0-1.5'
+      WHEN "averageRating" < 3 THEN '1.5-3'
+      WHEN "averageRating" < 4.5 THEN '3-4.5'
+      WHEN "averageRating" < 6 THEN '4.5-6'
+      end as rating_bin,
+count (distinct a.tconst)
+from imdb.title_basics a
+ join imdb.title_ratings b
+        on a.tconst = b.tconst
+where "isAdult" = true and "startYear" >= '1975'
+group by rating_bin
+order by rating_bin
+
+
+Задача 4
+https://metabase.sky.pro/question/89574
+select
+avg ("numVotes") as avg_numvotes
+from imdb.title_basics a
+ right join imdb.title_ratings b
+        on a.tconst = b.tconst
+where "averageRating" >='7' and a.tconst is null

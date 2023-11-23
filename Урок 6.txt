@@ -1,0 +1,39 @@
+Задача 1
+https://metabase.sky.pro/question/90291
+select  b.*
+
+        , count(*) as class
+
+from skyeng_db.classes as a
+
+    left join skyeng_db.teachers as b
+
+     on a.id_teacher = b.id_teacher
+
+where
+
+    class_status = 'success' or class_status = 'failed_by_student'
+
+    and date_trunc('year', a.class_start_datetime) = '2016-01-01'
+
+    and a.class_type !='trial'
+
+group by b.id_teacher
+
+order by class desc
+limit 1
+
+задача 2
+https://metabase.sky.pro/question/90642
+select classes, count (id_teacher) as teacher_mount
+from
+(select id_teacher, 
+     date_part ('month' , class_start_datetime) as month_class,
+     count (*) as classes
+from skyeng_db.classes
+where class_status = 'success' or class_status = 'failed_by_student'
+     and date_trunc('year', class_start_datetime) = '2016-01-01'
+     and class_type !='trial'
+group by id_teacher, month_class) t
+group by classes
+order by classes
